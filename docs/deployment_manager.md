@@ -16,5 +16,10 @@
 
 > "Циата"
 
+## Полезные ссылки
 
+- [Методологии развертывания](https://example.com/deployment-methodologies)
+- [Инструменты для автоматизации развертывания](https://example.com/deployment-tools)
+
+- 
 
