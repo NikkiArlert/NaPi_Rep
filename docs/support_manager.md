@@ -16,5 +16,9 @@
 
 > "Циата"
 
+## Полезные ссылки
+
+- [Документация по управлению изменениями](https://example.com/change-management)
+- [Методы мониторинга производительности](https://example.com/performance-monitoring)
 
 
