@@ -22,3 +22,8 @@
 - [Методы мониторинга производительности](https://example.com/performance-monitoring)
 
 
+![Пример изображения](https://avatars.mds.yandex.net/i?id=742ad265859a8ea2673e54ad352598e57561d6b5-4437137-images-thumbs&n=13)
+   
+
+
+
