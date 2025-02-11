@@ -21,5 +21,8 @@
 - [Методологии развертывания](https://example.com/deployment-methodologies)
 - [Инструменты для автоматизации развертывания](https://example.com/deployment-tools)
 
-- 
+
+![Пример изображения](https://avatars.mds.yandex.net/i?id=b1df3c75fff5b117f78ba21518bbea29128baac1-10133983-images-thumbs&n=13)
+   
+
 
