@@ -4,7 +4,7 @@ const knex = require('knex')({
   connection: { filename: './queue.db' },
   useNullAsDefault: true,
 });
-const bot = new Telegraf('Вставте свой токен'); // Твой токен
+const bot = new Telegraf('7794224797:AAFhNDfHkPEoOLxCzRzMsO_JQK72Wc2BOWU'); // Твой токен
 
 // --- Логирование ---
 function log(...args) {
@@ -88,6 +88,7 @@ bot.start(async (ctx) => {
       `  - Посмотреть список очередей админа: /listqueues @username_админа\n` +
       `  - Присоединиться к очереди: /join @username_админа [название очереди]\n` +
       `  - Проверить статус: /mystatus\n\n` +
+      `  - Написать пользователю: /sendmsg\n\n` +
       `Для подробностей используйте /help`
   );
   log(`/start от пользователя ${ctx.from.id}`);
@@ -294,6 +295,11 @@ bot.on('callback_query', async (ctx) => {
     return;
   }
 
+  /*if (data.startsWith('WRITE_TO_USER_')) {
+    const queueId = parseInt(data.split('_')[2]);
+    
+  }*/
+
   if (data.startsWith('DELETE_QUEUE_')) {
     const queueId = parseInt(data.split('_')[2]);
     try {
@@ -474,6 +480,60 @@ bot.command('join', async (ctx) => {
   } catch (e) {
     log('Ошибка в /join:', e);
     await ctx.reply('❌ Ошибка при присоединении.');
+  }
+});
+
+
+bot.command('sendmsg', async (ctx) => {
+  const userId = ctx.from.id;
+  const args = ctx.message.text.split(' ').slice(1);
+  
+  if (args.length < 3) {
+    return ctx.reply(
+      'Использование: /sendmsg <ID_очереди> <позиция_участника> <сообщение>\n\n' +
+      'Пример: /sendmsg 5 3 "Привет! Скоро ваша очередь"\n\n' +
+      'Id можно посмотреть при помощи команды при помощи команды /listqueues @Имя админа\n\n'
+    );
+  }
+
+  const queueId = parseInt(args[0]);
+  const userPosition = parseInt(args[1]);
+  const message = args.slice(2).join(' ');
+
+  try {
+    // Проверяем, что очередь существует и админ имеет к ней доступ
+    const queue = await knex('queues').where({ id: queueId, admin_id: userId }).first();
+    if (!queue) {
+      return ctx.reply('Очередь не найдена или у вас нет прав администратора.');
+    }
+
+    // Находим участника по позиции в очереди
+    const participant = await knex('participants')
+      .where({ queue_id: queueId, position: userPosition })
+      .first();
+
+    if (!participant) {
+      return ctx.reply(`Участник с позицией ${userPosition} не найден в очереди.`);
+    }
+
+    if (!participant.user_id) {
+      return ctx.reply('Этот участник не имеет user_id, сообщение нельзя отправить.');
+    }
+
+    // Отправляем сообщение
+    try {
+      await ctx.telegram.sendMessage(
+        participant.user_id,
+        `✉️ Сообщение от администратора очереди "${queue.title}":\n\n${message}`
+      );
+      await ctx.reply(`✅ Сообщение отправлено участнику @${participant.username || 'без username'} (позиция ${userPosition})`);
+    } catch (e) {
+      await ctx.reply('Не удалось отправить сообщение. Возможно, пользователь заблокировал бота.');
+    }
+
+  } catch (e) {
+    console.error('Ошибка в sendmsg:', e);
+    await ctx.reply('Произошла ошибка при отправке сообщения.');
   }
 });
 
