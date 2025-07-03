@@ -4,7 +4,7 @@ const knex = require('knex')({
   connection: { filename: './queue.db' },
   useNullAsDefault: true,
 });
-const bot = new Telegraf('7794224797:AAFhNDfHkPEoOLxCzRzMsO_JQK72Wc2BOWU'); // Твой токен
+const bot = new Telegraf('Вставте свой токен'); // Твой токен
 
 // --- Логирование ---
 function log(...args) {
