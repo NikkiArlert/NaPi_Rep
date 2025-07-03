@@ -1,6 +1,8 @@
 @echo off
-title Запуск бота + сервера + webapp
-
-start cmd /k "node index.js"
-start cmd /k "node server.js"
-start cmd /k "cd webapp && npm run dev"
+chcp 65001 >nul
+title Meeting Queue Bot
+color 0a
+echo Запуск бота...
+echo -------------------------------
+node index.js
+pause
